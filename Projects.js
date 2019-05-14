@@ -13,14 +13,43 @@ export default class Project extends Component {
       };
 
       this.updateProjectList = this.updateProjectList.bind(this);
+      this.deleteProject = this.deleteProject.bind(this);
+      this.editProject = this.editProject.bind(this);
     }
 
+    // To upadte the project list
     updateProjectList(project) {
         // Create a new array
         var updatedProjects = this.state.projects.concat(project);
 
         // Update the state
         this.setState({ projects: updatedProjects });
+    }
+
+    // To delete project
+    deleteProject(projectId) {
+      let projects = this.state.projects;
+      let index = projects.findIndex(project => project.id === projectId);
+      projects.splice(index, 1);
+
+      // Delete the project from table
+      axios.post('/api/projects/' + projectId, {
+        name: this.state.projectName,
+      })
+      .then(function (response) {
+        console.log(response);
+      })
+      .catch(function (error) {
+        console.log(error);
+      });
+
+      // Set the state
+      this.setState({ projects });
+    }
+
+    // To edit project details
+    editProject(projectId) {
+      console.log('Parent edit project: ' + projectId);
     }
 
     componentDidMount() {
@@ -45,7 +74,7 @@ export default class Project extends Component {
                     <div className="col-md-12">
                         <div className="card">
                           {/* Pass the project listing to child component  */}
-                        	<ProjectList projects={this.state.projects}></ProjectList>
+                        	<ProjectList func={this.deleteProject} projects={this.state.projects}></ProjectList>
                         </div>
                     </div>
                 </div>
