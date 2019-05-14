@@ -36,9 +36,7 @@ class ProjectController extends Controller
 
     public function show($id)
     {
-        $project = Project::with(['tasks' => function ($query) {
-            $query->where('is_completed', false);
-        }])->find($id);
+        $project = Project::find($id);
 
         return $project->toJson();
     }
@@ -49,5 +47,12 @@ class ProjectController extends Controller
         $project->update();
 
         return response()->json('Project updated!');
+    }
+
+    public function delete($projectId)
+    {
+      Project::where(['id' => $projectId])->delete();
+
+      return response()->json('Project deleted!');
     }
 }
